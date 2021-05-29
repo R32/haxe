@@ -28,54 +28,60 @@ extern class Memory {
 	}
 
 	static inline function setByte(addr:Int, v:Int):Void {
-		untyped __vmem_set__(0, addr, v);
+		__vmem_set__(0, addr, v);
 	}
 
 	static inline function setI16(addr:Int, v:Int):Void {
-		untyped __vmem_set__(1, addr, v);
+		__vmem_set__(1, addr, v);
 	}
 
 	static inline function setI32(addr:Int, v:Int):Void {
-		untyped __vmem_set__(2, addr, v);
+		__vmem_set__(2, addr, v);
 	}
 
 	static inline function setFloat(addr:Int, v:Float):Void {
-		untyped __vmem_set__(3, addr, v);
+		__vmem_set__(3, addr, v);
 	}
 
 	static inline function setDouble(addr:Int, v:Float):Void {
-		untyped __vmem_set__(4, addr, v);
+		__vmem_set__(4, addr, v);
 	}
 
 	static inline function getByte(addr:Int):Int {
-		return untyped __vmem_get__(0, addr);
+		return __vmem_get__(0, addr);
 	}
 
 	static inline function getUI16(addr:Int):Int {
-		return untyped __vmem_get__(1, addr);
+		return __vmem_get__(1, addr);
 	}
 
 	static inline function getI32(addr:Int):Int {
-		return untyped __vmem_get__(2, addr);
+		return __vmem_get__(2, addr);
 	}
 
 	static inline function getFloat(addr:Int):Float {
-		return untyped __vmem_get__(3, addr);
+		return __vmem_get__(3, addr);
 	}
 
 	static inline function getDouble(addr:Int):Float {
-		return untyped __vmem_get__(4, addr);
+		return __vmem_get__(4, addr);
 	}
 
 	static inline function signExtend1(v:Int):Int {
-		return untyped __vmem_sign__(0, v);
+		return __vmem_sign__(0, v);
 	}
 
 	static inline function signExtend8(v:Int):Int {
-		return untyped __vmem_sign__(1, v);
+		return __vmem_sign__(1, v);
 	}
 
 	static inline function signExtend16(v:Int):Int {
-		return untyped __vmem_sign__(2, v);
+		return __vmem_sign__(2, v);
 	}
+
+	extern private static function __vmem_get__( unit : Int, addr : Int ) : Dynamic;
+
+	extern private static function __vmem_set__( unit : Int, addr : Int, value : Dynamic ) : Void;
+
+	extern private static function __vmem_sign__( unit : Int, value : Int ) : Int;
 }

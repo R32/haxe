@@ -1457,6 +1457,9 @@ and gen_call ctx retval e el r =
 		gen_expr ctx true e;
 		gen_expr ctx true t;
 		write ctx (HOp A3OIs)
+	| TField (_,FStatic ({ cl_path = ["flash"],"Memory" }, f)), _ when has_class_field_flag f CfExtern ->
+		(* make the haxe optimizer works for "flash.Memory.opcode" *)
+		gen_call ctx retval (mk (TIdent f.cf_name) f.cf_type f.cf_pos) el r
 	| TIdent "__as__", [e;t] ->
 		gen_expr ctx true e;
 		gen_expr ctx true t;
