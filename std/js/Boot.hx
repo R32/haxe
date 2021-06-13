@@ -54,7 +54,6 @@ class Boot {
 		}
 	}
 
-	@:ifFeature("has_enum")
 	private static function __string_rec(o, s:String) {
 		untyped {
 			if (o == null)

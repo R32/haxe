@@ -1588,7 +1588,6 @@ let generate_class ctx c =
 let generate_enum ctx e =
 	let p = s_path ctx e.e_path in
 	let dotp = dot_path e.e_path in
-	let has_enum_feature = has_feature ctx "has_enum" in
 	if ctx.js_flatten then
 		print ctx "var "
 	else
@@ -1629,25 +1628,17 @@ let generate_enum ctx e =
 				let sfields = String.concat "," (List.map (fun (n,_,_) -> (ident n) ^ ":" ^ (ident n) ) args) in
 				let sparams = String.concat "," (List.map (fun (n,_,_) -> "\"" ^ (ident n) ^ "\"" ) args) in
 				print ctx "($_=function(%s) { return {_hx_index:%d,%s,__enum__:\"%s\"" sargs f.ef_index sfields dotp;
-				if has_enum_feature then
-					spr ctx ",toString:$estr";
 				print ctx "}; },$_._hx_name=\"%s\",$_.__params__ = [%s],$_)" f.ef_name sparams
 			end else begin
 				print ctx "function(%s) { var $x = [\"%s\",%d,%s]; $x.__enum__ = %s;" sargs f.ef_name f.ef_index sargs p;
-				if has_enum_feature then
-					spr ctx " $x.toString = $estr;";
 				spr ctx " return $x; }";
 			end end;
 		| _ ->
 			if as_objects then
-				print ctx "{_hx_name:\"%s\",_hx_index:%d,__enum__:\"%s\"%s}" f.ef_name f.ef_index dotp (if has_enum_feature then ",toString:$estr" else "")
+				print ctx "{_hx_name:\"%s\",_hx_index:%d,__enum__:\"%s\"}" f.ef_name f.ef_index dotp
 			else begin
 				print ctx "[\"%s\",%d]" f.ef_name f.ef_index;
 				newline ctx;
-				if has_feature ctx "has_enum" then begin
-					print ctx "%s%s.toString = $estr" p (field f.ef_name);
-					newline ctx;
-				end;
 				print ctx "%s%s.__enum__ = %s" p (field f.ef_name) p;
 			end
 		);
@@ -1972,9 +1963,6 @@ let generate com =
 	(* TODO: fix $estr *)
 	let vars = [] in
 	let vars = (if ctx.has_resolveClass || (not enums_as_objects && has_feature ctx "Type.resolveEnum") then ("$hxClasses = " ^ (if ctx.js_modern then "{}" else "$hxClasses || {}")) :: vars else vars) in
-	let vars = if has_feature ctx "has_enum"
-		then ("$estr = function() { return " ^ (ctx.type_accessor (TClassDecl { null_class with cl_path = ["js"],"Boot" })) ^ ".__string_rec(this,''); }") :: vars
-		else vars in
 	let vars = if (enums_as_objects && (has_feature ctx "has_enum" || has_feature ctx "Type.resolveEnum")) then "$hxEnums = $hxEnums || {}" :: vars else vars in
 	let vars,has_dollar_underscore =
 		if List.exists (function TEnumDecl { e_extern = false } -> true | _ -> false) com.types then
